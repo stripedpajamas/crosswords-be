@@ -1,10 +1,10 @@
 use actix_web::middleware::Logger;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use log::warn;
 use s3::bucket::Bucket;
 use s3::creds::Credentials;
 use s3::Region;
 use std::env;
-use log::{warn,error,info};
 
 struct AppState {
     bucket: Bucket,
@@ -47,7 +47,7 @@ async fn get_puz(puz_id: web::Path<String>, data: web::Data<AppState>) -> impl R
         Ok(data) => {
             let bytes = Vec::from(data.bytes());
             HttpResponse::Ok().body(bytes)
-        },
+        }
         Err(err) => {
             warn!("{:#?}", err);
             HttpResponse::NotFound().finish()
